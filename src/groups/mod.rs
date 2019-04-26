@@ -936,6 +936,22 @@ pub fn pairing(p: &G1, q: &G2) -> Fq12 {
     }
 }
 
+pub fn multi_pairing(p: &[G1], q: &[G2]) -> Fq12 {
+    let mut affine_pairs = vec![];
+    for pair in p.iter().zip(q.iter()) {
+        match (pair.0.to_affine(), pair.1.to_affine()) {
+            (None, _) | (_, None) => {},
+            (Some(p), Some(q)) => {
+                affine_pairs.push((p,q));   
+            }
+        }
+    }
+
+    let result = affine_pairs.into_iter().fold(Fq12::one(), |s, (a, b)| s * b.precompute().miller_loop(&a)).final_exponentiation();
+
+    result.unwrap()
+}
+
 #[test]
 fn test_reduced_pairing() {
     use fields::Fq6;

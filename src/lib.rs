@@ -616,6 +616,13 @@ pub fn pairing(p: G1, q: G2) -> Gt {
     Gt(groups::pairing(&p.0, &q.0))
 }
 
+pub fn multi_pairing(p: Vec<G1>, q: Vec<G2>) -> Gt {
+    let p: Vec<_> = p.into_iter().map(|el| el.0).collect();
+    let q: Vec<_> = q.into_iter().map(|el| el.0).collect();
+
+    Gt(groups::multi_pairing(&p, &q))
+}
+
 #[derive(Copy, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "rustc-serialize", derive(RustcDecodable, RustcEncodable))]
 #[repr(C)]

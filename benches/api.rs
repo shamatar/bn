@@ -156,3 +156,41 @@ benchmark!(perform_pairing,
 
            pairing(input.0, input.1)
 );
+
+#[bench]
+fn pair_one(b: &mut test::Bencher) {
+    let num_points = 1;
+    let rng = &mut rand::thread_rng();
+    let input: Vec<_> = (0..num_points).map(|_| (G1::random(rng), G2::random(rng))).collect();
+    let mut g1_points = vec![];
+    let mut g2_points = vec![];
+    for pair in input.into_iter() {
+        g1_points.push(pair.0);
+        g2_points.push(pair.1);
+    }
+
+    let mut c = 0;
+
+    b.iter(|| {
+        multi_pairing(g1_points.clone(), g2_points.clone());
+    });
+}
+
+#[bench]
+fn pair_ten(b: &mut test::Bencher) {
+    let num_points = 10;
+    let rng = &mut rand::thread_rng();
+    let input: Vec<_> = (0..num_points).map(|_| (G1::random(rng), G2::random(rng))).collect();
+    let mut g1_points = vec![];
+    let mut g2_points = vec![];
+    for pair in input.into_iter() {
+        g1_points.push(pair.0);
+        g2_points.push(pair.1);
+    }
+
+    let mut c = 0;
+
+    b.iter(|| {
+        multi_pairing(g1_points.clone(), g2_points.clone());
+    });
+}
